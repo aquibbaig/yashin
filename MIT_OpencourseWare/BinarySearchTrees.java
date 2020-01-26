@@ -1,54 +1,58 @@
 // Used to solve runway reservation in O(h) time
 // Can be used in comparision where order doesn't matter and questions 
 // such as successor/predecessor, or how many greater or less than sth
-public class BinarySearchTrees {
+// This is a AVL Tree without rotation, which is 
+// a BST
+public class MyClass {
+    public static void main(String args[]) {
+      AVLTree at = new AVLTree(new Node(40));
+      at.insert(new Node(26));
+      at.insert(new Node(33));
+      at.insert(new Node(18));
+      at.insert(new Node(46));
+      at.insert(new Node(64));
+      System.out.println(at.root.height);
+    }
     static class Node {
         Node leftChild;
         Node rightChild;
-        int key;
-        int size;
+        int data;
+        int height;
         public Node(int data) {
             this.leftChild = null;
             this.rightChild = null;
-            this.key = data;
-            this.size = 0;
+            this.data = data;
+            int height = 0;
         }
     }
-    static class BST {
+    static class AVLTree {
         Node root;
-        public BST() {
-            this.root = null;
+        public AVLTree (Node root) {
+            this.root = root;
         }
-        public static void insert(Node ref, int num) {
-            ref.size += 1;
-            if (num <= ref.key) {
-                if (ref.leftChild != null) {
-                    insert(ref.leftChild, num);   
-                } else {
-                    ref.leftChild = new Node(num);
-                    ref.leftChild.size += 1;
-                }
-            }
-            else if (num > ref.key) {
-                if (ref.rightChild != null) {
-                    insert(ref.rightChild, num);
-                } else {
-                    ref.rightChild = new Node(num);  
-                    ref.rightChild.size += 1;
-                }
-            }
+        public int height(Node curr) {
+            int h = curr == null ? -1 : curr.height;
+            return h;
         }
-    }
-    public static void main(String args[]) {
-      BST bst = new BST();
-      bst.root = new Node(42);
-      bst.root.size = 1;
-      bst.insert(bst.root, 21);
-      bst.insert(bst.root, 26);
-      bst.insert(bst.root, 28);
-      bst.insert(bst.root, 34);
-      bst.insert(bst.root, 70);
-      System.out.println(bst.root.leftChild.key + "---->" + bst.root.key + "<------" + bst.root.rightChild.key);
-      System.out.println(bst.root.size);
+        public int max(int a, int b) {
+            int m = a > b ? a : b;
+            return m;
+        }
+        public void insert(Node node) {
+            this.root = insert(node, this.root);
+        }
+        public Node insert(Node node, Node curr) {
+            if (curr == null) {
+                curr = node;
+            }
+            else if (node.data <= curr.data) {
+                curr.leftChild = insert(node, curr.leftChild);
+            }
+            else {
+                curr.rightChild = insert(node, curr.rightChild);
+            }
+            curr.height = max(height(curr.leftChild), height(curr.rightChild)) + 1;
+            return curr;
+        }
     }
 }
